@@ -1,0 +1,116 @@
+
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>ReservedCSV</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.5.0/papaparse.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  </head>
+  <body>
+    <center>
+      <br><br><br>
+      <h1>Input a CSV of the current Reserved List</h1>
+      <span class="text-secondary">This file is "reservedlist.csv" in the GitHub download, but feel free to input your own</span>
+      <br>
+      <input type="file" id="reservedlist">
+      <br><br><br>
+      <h1>Input the CSV of the cards you want to search</h1>
+      <span class="text-secondary">This file is your own. This is the file that will be searched for any reserved list cards.</span>
+      <br>
+      <input type="file" id="searchMe">
+      <br><br><br>
+      <button type="button" id="submit">Submit</button>
+      <br><br><br>
+      <span class="text-secondary">The results of the search will appear below</span>
+      <br><br>
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8">
+          <table class="table table-bordered" id="results" style="display: none;">
+            <tr>
+              <th class="thead-light" scope="col"><center>Results</center></th>
+            </tr>
+          </table>
+        </div>
+        <div class="col-sm-2"></div>
+    </center>
+  </body>
+</html>
+
+<script>
+
+submitButton = document.getElementById("submit");
+
+submitButton.addEventListener('click', e=> {
+  while (document.getElementById("results").hasChildNodes()) {
+    document.getElementById("results").removeChild(document.getElementById("results").lastChild);
+  }
+  var reservedList = Papa.parse(document.getElementById("reservedlist").files[0], {
+      complete: function(results) {
+          console.log(results);
+          var searchListLength = results.data.length;
+          var searchList = Papa.parse(document.getElementById("searchMe").files[0], {
+              complete: function(results2) {
+                  console.log(results2);
+                  var searchListLength2 = results2.data.length;
+                  //console.log(searchListLength);
+                  var x = 0;
+                  var y = 0;
+                  console.log(searchListLength2);
+                  for(x = 0; x<searchListLength2; x++) {
+                    //console.log("X: " + x);
+                    //console.log("HERE!");
+                    //console.log(results2.data[x]);
+                    var cardname = "" + results2.data[x][0].toLowerCase();
+                    //console.log(cardname);
+                    for(y = 0; y<searchListLength; y++) {
+                      //console.log(searchListLength);
+                      //console.log("Y: " + y);
+                      var reservedcardname = "" + results.data[y][0].toLowerCase();
+                      //console.log(reservedcardname);
+                      //console.log(cardname.indexOf(reservedcardname) > -1);
+                      if(reservedcardname.localeCompare(cardname) == 0) {
+                        var row = document.createElement('tr');
+                        var td = document.createElement('td');
+                        td.innerHTML = "<center>Reserved List Card <b>" + results2.data[x][0] + " </b>Found at line <b>" + x + "</b></center>";
+                        td.scope = "row";
+                        row.appendChild(td);
+                        document.getElementById("results").appendChild(row);
+                        document.getElementById("results").style = "";
+                        console.log("Reserved List Card " + results2.data[x][0] + " Found at line " + x);
+                        break;
+                      }
+                    }
+                    //console.log(document.getElementById("results").style.cssText);
+                    if(x == searchListLength2-1 && document.getElementById("results").style.cssText == "display: none;") {
+                      var row = document.createElement('tr');
+                      var td = document.createElement('td');
+                      td.innerHTML = "No Reserved List Cards Found!";
+                      row.appendChild(td);
+                      document.getElementById("results").appendChild(row);
+                      document.getElementById("results").style = "";
+                    }
+                  }
+              }
+          });
+      }
+  });
+
+
+});
+
+
+
+/* const csvData = Papa.parse(csv, {header:true}).data
+
+function findEmailByName(name) {
+  return csvData.filter(data => data.Name === name)[0].Email
+}
+
+console.log(
+  findEmailByName('exampleName2')
+); */
+
+</script>
