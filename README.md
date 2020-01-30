@@ -8,3 +8,6 @@ The CSV list of cards should be only one column of card names.
 All you have to do is open index.html in any browser of your choice and you can find all of the reserved list cards in your csv!
 <br><br>
 (I'm sure this has other applications but it's all I'm using it for)
+<br>
+### ReservedCSV In Action
+![ReservedCSV](https://i.imgur.com/ExkRYlF.png)
